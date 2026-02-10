@@ -6,7 +6,7 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 14:56:44 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/03 16:46:54 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/10 21:59:59 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,23 @@ static char	*read_and_stash(int fd, char *stash)
 	return (stash);
 }
 
+static char	*update_stash(char *stash, int len)
+{
+	char	*new_stash;
+
+	new_stash = ft_substr(stash, len, ft_strlen(stash));
+	free(stash);
+	return (new_stash);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*line;
-	char		*temp;
 	int			i;
+	int			len;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 8388608)
 		return (NULL);
 	stash = read_and_stash(fd, stash);
 	if (!stash || *stash == '\0')
@@ -56,9 +65,10 @@ char	*get_next_line(int fd)
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
-	line = ft_substr(stash, 0, i + (stash[i] == '\n'));
-	temp = stash;
-	stash = ft_substr(temp, i + (temp[i] == '\n'), ft_strlen(temp));
-	free(temp);
+	len = i;
+	if (stash[i] == '\n')
+		len++;
+	line = ft_substr(stash, 0, len);
+	stash = update_stash(stash, len);
 	return (line);
 }

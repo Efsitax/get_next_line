@@ -6,7 +6,7 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 15:57:10 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/03 16:53:28 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/10 21:48:13 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[j])
 		joined[i++] = s2[j++];
 	joined[i] = '\0';
-	return (free(s1), joined);
+	free(s1);
+	return (joined);
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
