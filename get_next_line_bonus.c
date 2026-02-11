@@ -6,11 +6,17 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 11:42:59 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/10 22:00:21 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/11 20:32:21 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+
+char	*clear_str(char *str)
+{
+	free(str);
+	return (NULL);
+}
 
 static char	*read_and_stash(int fd, char *stash)
 {
@@ -19,7 +25,7 @@ static char	*read_and_stash(int fd, char *stash)
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
-		return (NULL);
+		return (clear_str(stash));
 	r_bytes = 1;
 	while (!ft_strchr(stash, '\n') && r_bytes != 0)
 	{
@@ -32,6 +38,8 @@ static char	*read_and_stash(int fd, char *stash)
 		}
 		buffer[r_bytes] = '\0';
 		stash = ft_strjoin(stash, buffer);
+		if (!stash)
+			return (clear_str(buffer));
 	}
 	free(buffer);
 	return (stash);
@@ -41,9 +49,26 @@ static char	*update_stash(char *stash, int len)
 {
 	char	*new_stash;
 
-	new_stash = ft_substr(stash, len, ft_strlen(stash));
+	if (!stash)
+		return (NULL);
+	if ((size_t)len >= ft_strlen(stash))
+	{
+		free(stash);
+		return (NULL);
+	}
+	new_stash = ft_substr(stash, len, ft_strlen(stash) - len);
 	free(stash);
 	return (new_stash);
+}
+
+static char	*free_stash(char **stash)
+{
+	if (stash && *stash)
+	{
+		free(*stash);
+		*stash = NULL;
+	}
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
@@ -51,24 +76,21 @@ char	*get_next_line(int fd)
 	static char	*stash[4096];
 	char		*line;
 	int			i;
-	int			len;
 
 	if (fd < 0 || fd >= 4096 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 8388608)
 		return (NULL);
 	stash[fd] = read_and_stash(fd, stash[fd]);
-	if (!stash[fd] || *stash[fd] == '\0')
-	{
-		free(stash[fd]);
-		stash[fd] = NULL;
+	if (!stash[fd])
 		return (NULL);
-	}
+	if (!*stash[fd])
+		return (free_stash(&stash[fd]));
 	i = 0;
 	while (stash[fd][i] && stash[fd][i] != '\n')
 		i++;
-	len = i;
-	if (stash[fd][i] == '\n')
-		len++;
-	line = ft_substr(stash[fd], 0, len);
-	stash[fd] = update_stash(stash[fd], len);
+	i += (stash[fd][i] == '\n');
+	line = ft_substr(stash[fd], 0, i);
+	if (!line)
+		return (free_stash(&stash[fd]));
+	stash[fd] = update_stash(stash[fd], i);
 	return (line);
 }

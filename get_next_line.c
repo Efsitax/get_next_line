@@ -6,11 +6,17 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 14:56:44 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/10 21:59:59 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/11 19:29:29 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*clear_str(char *str)
+{
+	free(str);
+	return (NULL);
+}
 
 static char	*read_and_stash(int fd, char *stash)
 {
@@ -19,7 +25,7 @@ static char	*read_and_stash(int fd, char *stash)
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
-		return (NULL);
+		return (clear_str(stash));
 	read_bytes = 1;
 	while (!ft_strchr(stash, '\n') && read_bytes != 0)
 	{
@@ -32,6 +38,8 @@ static char	*read_and_stash(int fd, char *stash)
 		}
 		buffer[read_bytes] = '\0';
 		stash = ft_strjoin(stash, buffer);
+		if (!stash)
+			return (clear_str(buffer));
 	}
 	free(buffer);
 	return (stash);
@@ -46,6 +54,16 @@ static char	*update_stash(char *stash, int len)
 	return (new_stash);
 }
 
+static char	*free_stash(char **stash)
+{
+	if (stash && *stash)
+	{
+		free(*stash);
+		*stash = NULL;
+	}
+	return (NULL);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*stash;
@@ -56,12 +74,10 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 8388608)
 		return (NULL);
 	stash = read_and_stash(fd, stash);
-	if (!stash || *stash == '\0')
-	{
-		free(stash);
-		stash = NULL;
+	if (!stash)
 		return (NULL);
-	}
+	if (!*stash)
+		return (free_stash(&stash));
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
@@ -69,6 +85,8 @@ char	*get_next_line(int fd)
 	if (stash[i] == '\n')
 		len++;
 	line = ft_substr(stash, 0, len);
+	if (!line)
+		return (free_stash(&stash));
 	stash = update_stash(stash, len);
 	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 14:52:56 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/03 16:41:30 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/11 19:24:03 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 
 char	*get_next_line(int fd);
+char	*clear_str(char *str);
 
 char	*ft_strchr(const char *s, int c);
 size_t	ft_strlen(const char *s);

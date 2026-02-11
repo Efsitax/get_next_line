@@ -6,7 +6,7 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/03 15:57:10 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/10 21:48:13 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/11 19:24:18 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ char	*ft_strjoin(char *s1, char *s2)
 		s1[0] = '\0';
 	}
 	if (!s2)
-		return (NULL);
+		return (clear_str(s1));
 	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!joined)
-		return (free(s1), NULL);
+		return (clear_str(s1));
 	i = -1;
 	while (s1[++i])
 		joined[i] = s1[i];
