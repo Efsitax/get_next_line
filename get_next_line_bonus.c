@@ -6,7 +6,7 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 11:42:59 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/11 20:32:21 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/11 22:23:27 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	int			i;
 
-	if (fd < 0 || fd >= 4096 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 8388608)
+	if (fd < 0 || fd >= 4096 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash[fd] = read_and_stash(fd, stash[fd]);
 	if (!stash[fd])
