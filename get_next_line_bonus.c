@@ -6,7 +6,7 @@
 /*   By: kugurlu <kugurlu@student.42istanbul.com.tr +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/04 11:42:59 by kugurlu           #+#    #+#             */
-/*   Updated: 2026/02/11 22:23:27 by kugurlu          ###   ########.fr       */
+/*   Updated: 2026/02/13 18:00:07 by kugurlu          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ char	*get_next_line(int fd)
 	i = 0;
 	while (stash[fd][i] && stash[fd][i] != '\n')
 		i++;
-	i += (stash[fd][i] == '\n');
+	if (stash[fd][i] == '\n')
+		i++;
 	line = ft_substr(stash[fd], 0, i);
 	if (!line)
 		return (free_stash(&stash[fd]));
